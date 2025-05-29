@@ -24,6 +24,7 @@ hs_err_pid*
 replay_pid*
 
 /src/main/resources/hibernate.cfg.xml
+\src\main\resources\hibernate.cfg.xml
 /src/main/java/com/rap17/Main.java.bk
 
 target/
