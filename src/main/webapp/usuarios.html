@@ -156,40 +156,6 @@
     });
 }
 
-
-    
-    /* function registrarUsuario(){
-        console.log("entro a registrarUsuario");
-        const formData = new FormData(document.querySelector("form"));
-        fetch("registrar", {
-        method: "POST",
-        body: new FormData(this)
-        })
-        .then(response => {
-            const formulario = document.querySelector(".main");
-            
-            // Limpiar todos los inputs
-            formulario.querySelectorAll("input").forEach(input => input.value = "");
-            
-            // Restablecer todos los selects a su primer valor
-            formulario.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
-            
-            // Mostrar el modal
-            document.getElementById("modalSuccess").classList.add("active");
-            document.querySelector(".modal-overlay").classList.add("active");
-            this.reset();
-            document.querySelector(".button_back").addEventListener("click", function() {
-                const formulario = document.querySelector(".main");
-                // Limpiar todos los inputs
-                formulario.querySelectorAll("input").forEach(input => input.value = "");
-                // Restablecer todos los selects a su primer valor
-                formulario.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
-            });
-
-        });
-    }
-
- */
     // Cerrar el modal
     document.getElementById("closeModal").addEventListener("click", function() {
         document.getElementById("modalSuccess").classList.remove("active");
