@@ -38,23 +38,23 @@
             <form>
                 <div class="input_name">
                     <span class="label_input">Nombre</span>
-                    <input name="nombre" type="text" class="input" placeholder="Nombre">
+                    <input name="nombre" type="text" class="input" placeholder="Nombre" id="nombre">
                 </div>
                 <div class="input_mail">
                     <span class="label_input">Correo</span>
-                    <input name="correo" type="text" class="input" placeholder="Correo">
+                    <input name="correo" type="text" class="input" placeholder="Correo" id="correo">
                 </div>    
                 <div class="input_user">
                     <span class="label_input">Usuario</span>
-                    <input name="username" type="text" class="input" placeholder="Usuario">
+                    <input name="username" type="text" class="input" placeholder="Usuario" id="username">
                 </div>
                 <div class="input_pass">
                     <span class="label_input">Contraseña</span>
-                    <input name="password" type="text" class="input" placeholder="Contraseña">
+                    <input name="password" type="password" class="input" placeholder="Contraseña" id="password">
                 </div>
                 <div class="input_rol">
                     <span class="label_input">Rol</span>
-                    <select name="rol" class="input">
+                    <select name="rol" class="input" id="rol">
                         <option value="" disabled selected>Seleccione el rol</option>
                         <option value="Operador">Operador</option>
                         <option value="Lider">Lider</option>
@@ -64,14 +64,14 @@
                 </div>
                 <div class="input_area">
                     <span class="label_input">Área</span>
-                    <select name="area" class="input">
+                    <select name="area" class="input" id="area">
                         <option value="" disabled selected>Seleccione el área</option>
                         <option value="Pre-Sales">Pre-Sales</option>
                         <option value="Comercial">Comercial</option>
                         <option value="Operaciones">Operaciones</option>
                     </select>
                 </div>
-                <button onClick="registrarUsuario()" class="button_send">
+                <button onClick="validarFormularioRegistro()" class="button_send">
                     <span class="text_send">Registrar</span>
                 </button>
                 <button class="button_back">
@@ -118,9 +118,48 @@
         }
     }
 
+    function registrarUsuario() {
+    //event.preventDefault(); // Evita que se recargue la página
+
+    console.log("entro a registrarUsuario");
+
+    const form = document.querySelector("form");
+    const formData = new FormData(form);
+
+    fetch("registrar", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Error en el registro");
+
+        const formulario = document.querySelector(".main");
+
+        // Limpiar todos los inputs
+        formulario.querySelectorAll("input").forEach(input => input.value = "");
+
+        // Restablecer todos los selects a su primer valor
+        formulario.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
+
+        // Mostrar el modal
+        document.getElementById("modalSuccess").classList.add("active");
+        document.querySelector(".modal-overlay").classList.add("active");
+
+        // Agregar evento al botón para limpiar el formulario
+        document.querySelector(".button_back").addEventListener("click", function() {
+            formulario.querySelectorAll("input").forEach(input => input.value = "");
+            formulario.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
+        });
+    })
+    .catch(error => {
+        console.error("Error en la solicitud:", error);
+    });
+}
+
 
     
-    function registrarUsuario(){
+    /* function registrarUsuario(){
+        console.log("entro a registrarUsuario");
         const formData = new FormData(document.querySelector("form"));
         fetch("registrar", {
         method: "POST",
@@ -150,7 +189,7 @@
         });
     }
 
-
+ */
     // Cerrar el modal
     document.getElementById("closeModal").addEventListener("click", function() {
         document.getElementById("modalSuccess").classList.remove("active");
@@ -261,7 +300,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {     
+            if (data.success) {
                 document.querySelector('.button_send').setAttribute('onClick', 'registrarUsuario()');
                 document.querySelector('.button_send').querySelector('.text_send').textContent = 'Registrar';
                 alert("Usuario actualizado correctamente.");
@@ -273,6 +312,56 @@
         .catch(error => console.error('Error:', error));
     }
 
+function validarFormularioRegistro() {
+  event.preventDefault(); // Evita envío del formulario
+
+  // Obtener los valores de los campos
+  const nombre = document.getElementById("nombre").value.trim();
+  const correo = document.getElementById("correo").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const rol = document.getElementById("rol").value;
+  const area = document.getElementById("area").value;
+
+  // Expresiones regulares
+  const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Validaciones
+  if (nombre.length < 2 || !soloLetras.test(nombre)) {
+    alert("Por favor ingrese un nombre válido (mínimo 2 letras, solo letras y espacios).");
+    return;
+  }
+
+  if (!correoValido.test(correo)) {
+    alert("Por favor ingrese un correo válido.");
+    return;
+  }
+
+  if (username.length < 4) {
+    alert("El nombre de usuario debe tener al menos 4 caracteres.");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("La contraseña debe tener al menos 6 caracteres.");
+    return;
+  }
+
+  if (!rol) {
+    alert("Por favor seleccione un rol.");
+    return;
+  }
+
+  if (!area) {
+    alert("Por favor seleccione un área.");
+    return;
+  }
+
+  // Si todo está bien
+  //alert("Usuario registrado correctamente.");
+  registrarUsuario();
+}
 
 </script>
 
